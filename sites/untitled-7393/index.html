@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 
+  Dev Callahan — WebBuilderBot | 5R AI Operations Team
+  FILE: 5royals_landing_v1.html
+  ASSUMPTIONS:
+  - Brand not specified → defaulting to 5R TradeSuite AI (5R ecosystem primary brand)
+  - No offer/copy details provided → using generic 5R TradeSuite AI value proposition
+  - No contact info provided → using default support@5rtradesuite.com
+  - No CTA link provided → using "#" placeholder (swap before going live)
+  - Page type: Landing page
+  HAND-OFF NOTE: Replace all [PLACEHOLDER] values before final deployment.
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5R TradeSuite AI — AI Agents Built for Skilled Tradesmen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:    #C9A84C;
+    --gold-lt: #E8C96A;
+    --navy:    #0D1B2A;
+    --navy-md: #152233;
+    --navy-lt: #1E2F45;
+    --white:   #FFFFFF;
+    --gray:    #F4F6F8;
+    --gray-2:  #8A96A3;
+    --text:    #1A2535;
+    --radius:  8px;
+    --shadow:  0 4px 20px rgba(0,0,0,.12);
+    --font:    'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── UTILITY ── */
+  .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  .btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background .2s, transform .15s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--gold-lt); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+  }
+  .btn-outline:hover { background: var(--gold); color: var(--navy); }
+  .tag {
+    display: inline-block;
+    background: rgba(201,168,76,.15);
+    color: var(--gold);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  h1,h2,h3 { line-height: 1.2; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--navy);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-badge {
+    width: 38px; height: 38px;
+    background: var(--gold);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .logo-text { color: var(--white); font-weight: 700; font-size: 1rem; line-height: 1.2; }
+  .logo-text span { color: var(--gold); }
+  nav a.cta-nav {
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: .85rem;
+    padding: 9px 20px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background .2s;
+  }
+  nav a.cta-nav:hover { background: var(--gold-lt); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lt) 100%);
+    color: var(--white);
+    padding: 72px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: rgba(255,255,255,.82);
+    max-width: 640px;
+    margin: 0 auto 32px;
+  }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── SOCIAL PROOF STRIP ── */
+  .proof-strip {
+    background: var(--navy-md);
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .proof-strip p {
+    color: rgba(255,255,255,.65);
+    font-size: .85rem;
+    letter-spacing: .04em;
+  }
+  .proof-strip strong { color: var(--gold); }
+
+  /* ── PROBLEM / SOLUTION ── */
+  .section { padding: 64px 20px; }
+  .section-alt { background: var(--gray); }
+  .section-header { text-align: center; margin-bottom: 44px; }
+  .section-header h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; }
+  .section-header p { color: var(--gray-2); margin-top: 10px; font-size: 1rem; max-width: 580px; margin-left: auto; margin-right: auto; }
+
+  .two-col { display: grid; grid-template-columns: 1fr; gap: 32px; }
+  @media(min-width: 640px) { .two-col { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--gold);
+  }
+  .card-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: .92rem; color: var(--gray-2); }
+
+  /* ── HOW IT WORKS ── */
+  .steps { display: grid; grid-template-columns: 1fr; gap: 28px; }
+  @media(min-width: 700px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .step-num {
+    width: 48px; height: 48px;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 900;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: .88rem; color: var(--gray-2); }
+
+  /* ── FEATURES GRID ── */
+  .features { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media(min-width: 560px) { .features { grid-template-columns: 1fr 1fr; } }
+  @media(min-width: 900px) { .features { grid-template-columns: repeat(3, 1fr); } }
+  .feature-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  }
+  .feat-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .feature-item h3 { font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
+  .feature-item p { font-size: .83rem; color: var(--gray-2); }
+
+  /* ── WHO IT'S FOR ── */
+  .audience-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  @media(min-width: 560px) { .audience-list { grid-template-columns: 1fr 1fr; } }
+  .audience-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .audience-item span:first-child { font-size: 1.4rem; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  @media(min-width: 640px) { .testimonials { grid-template-columns: 1fr 1fr 1fr; } }
+  .testimonial {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 28px 22px;
+    position: relative;
+  }
+  .stars { color: var(--gold); font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
+  .testimonial p { font-size: .9rem; line-height: 1.65; color: rgba(255,255,255,.85); }
+  .testimonial-author {
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: .85rem;
+    color: var(--gold);
+  }
+
+  /* ── CTA BAND ── */
+  .cta-band {
+    background: linear-gradient(135deg, var(--gold) 0%, #B8922E 100%);
+    padding: 72px 20px;
+    text-align: center;
+  }
+  .cta-band h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+  .cta-band p { color: rgba(13,27,42,.75); max-width: 520px; margin: 0 auto 28px; font-size: 1rem; }
+  .cta-band .btn { background: var(--navy); color: var(--white); }
+  .cta-band .btn:hover { background: var(--navy-lt); }
+
+  /* ── CONTACT ── */
+  .contact-section { padding: 56px 20px; text-align: center; background: var(--gray); }
+  .contact-section h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+  .contact-section p { color: var(--gray-2); margin-bottom: 24px; }
+  .contact-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px 36px;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .contact-row { display: flex; align-items: center; gap: 10px; font-size: .95rem; }
+  .contact-row span:first-child { font-size: 1.3rem; }
+  .contact-row a { color: var(--navy); font-weight: 600; text-decoration: none; }
+  .contact-row a:hover { color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,.55);
+    text-align: center;
+    padding: 28px 20px;
+    font-size: .8rem;
+  }
+  footer strong { color: var(--gold); }
+  footer a { color: rgba(255,255,255,.55); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-badge">5R</div>
+      <div class="logo-text"><span>TradeSuite</span> AI</div>
+    </a>
+    <a href="#get-started" class="cta-nav">Get Started →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="tag">AI Agents for Skilled Trades</div>
+    <h1>Run Your Trade Business<br><span>Smarter — Not Harder</span></h1>
+    <p>5R TradeSuite AI puts powerful AI agents in the hands of electricians, plumbers, HVAC techs, and every skilled tradesman ready to scale.</p>
+    <div class="hero-btns">
+      <a href="#get-started" class="btn">Start Free Today →</a>
+      <a href="#how-it-works" class="btn btn-outline">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <p>Trusted by tradesmen across the country &nbsp;·&nbsp; <strong>Powered by 5Royals Investments LLC</strong> &nbsp;·&nbsp; Veteran-Owned &amp; Operated 🇺🇸</p>
+</div>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">The Problem</div>
+      <h2>Your Trade Skills Are World-Class.<br>Your Admin Overhead Shouldn't Be.</h2>
+      <p>Most tradesmen spend hours every week on tasks that have nothing to do with their craft. We fix that.</p>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-icon">😤</div>
+        <h3>Without 5R TradeSuite AI</h3>
+        <p>Chasing invoices, writing estimates by hand, missing leads after hours, drowning in paperwork, and losing jobs to competitors with slicker systems.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>With 5R TradeSuite AI</h3>
+        <p>AI agents handle your follow-ups, quotes, scheduling, and customer communication — so you stay on the tools and grow your revenue at the same time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">How It Works</div>
+      <h2>Three Steps to Autopilot</h2>
+      <p>No tech background required. If you can run a job site, you can run 5R TradeSuite AI.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Pick Your AI Agents</h3>
+        <p>Choose from our ready-built AI agents designed specifically for your trade and business size.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Set Your Preferences</h3>
+        <p>Tell the system your rates, service area, and schedule. Setup takes minutes, not days.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Watch It Work</h3>
+        <p>Your AI agents follow up with leads, send quotes, and handle customer messages — around the clock.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">Features</div>
+      <h2>Everything a Tradesman Needs in One Suite</h2>
+    </div>
+    <div class="features">
+      <div class="feature-item">
+        <div class="feat-icon">🤖</div>
+        <div>
+          <h3>Lead-Capture AI Agent</h3>
+          <p>Grabs new inquiries from your website and social — instantly responds so no lead goes cold.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">📋</div>
+        <div>
+          <h3>Automated Quoting</h3>
+          <p>Generate professional estimates in seconds based on your pricing and job type.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">📅</div>
+        <div>
+          <h3>Scheduling Assistant</h3>
+          <p>Let customers book jobs without a single phone call back-and-forth.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">💬</div>
+        <div>
+          <h3>Follow-Up Sequences</h3>
+          <p>Automated text &amp; email follow-ups keep prospects warm until they book.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">⭐</div>
+        <div>
+          <h3>Review Collector</h3>
+          <p>Automatically ask happy customers for Google &amp; Facebook reviews after every job.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">📊</div>
+        <div>
+          <h3>Simple Dashboard</h3>
+          <p>See all your leads, jobs, and revenue in one plain-English dashboard — no spreadsheets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">Who It's For</div>
+      <h2>Built for the Trades</h2>
+      <p>If you work with your hands and run your own business, 5R TradeSuite AI was built for you.</p>
+    </div>
+    <div class="audience-list">
+      <div class="audience-item"><span>⚡</span> Electricians</div>
+      <div class="audience-item"><span>🔧</span> Plumbers</div>
+      <div class="audience-item"><span>❄️</span> HVAC Technicians</div>
+      <div class="audience-item"><span>🏗️</span> General Contractors</div>
+      <div class="audience-item"><span>🪵</span> Carpenters &amp; Framers</div>
+      <div class="audience-item"><span>🎨</span> Painters</div>
+      <div class="audience-item"><span>🌿</span> Landscapers</div>
+      <div class="audience-item"><span>🔩</span> All Skilled Tradesmen</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">Testimonials</div>
+      <h2>What Tradesmen Are Saying</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"I was skeptical about AI, but this thing books jobs while I'm on a roof. Picked up two new customers last week just from the follow-up agent."</p>
+        <div class="testimonial-author">— Marcus T., Roofing Contractor</div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"My quote response time went from two days to two minutes. Customers love it and I'm closing way more jobs than before."</p>
+        <div class="testimonial-author">— Deb R., Licensed Electrician</div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"I'm a one-man plumbing operation. This is like having a full-time office manager that never calls in sick."</p>
+        <div class="testimonial-author">— James K., Master Plumber</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band" id="get-started">
+  <div class="container">
+    <h2>Ready to Let AI Agents Work While You Do?</h2>
+    <p>Join skilled tradesmen across the country using 5R TradeSuite AI to win more jobs and reclaim their time.</p>
+    <a href="#" class="btn">Get Started Free →</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section">
+  <div class="container">
+    <h2>Have Questions?</h2>
+    <p>Our team is ready to help you get set up fast.</p>
+    <div class="contact-card">
+      <div class="contact-row">
+        <span>📧</span>
+        <span>Email: <a href="mailto:support@5rtradesuite.com">support@5rtradesuite.com</a></span>
+      </div>
+      <div class="contact-row">
+        <span>📬</span>
+        <span>General: <a href="mailto:5rtradesuiteai@gmail.com">5rtradesuiteai@gmail.com</a></span>
+      </div>
+      <div class="contact-row">
+        <span>🏢</span>
+        <span>5Royals Investments LLC — Veteran-Owned 🇺🇸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© <script>document.write(new Date().getFullYear())</script> <strong>5Royals Investments LLC</strong> · All Rights Reserved · <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a></p>
+  <p style="margin-top:6px;">5R TradeSuite AI — AI Agents Built for Skilled Tradesmen</p>
+</footer>
+
+</body>
+</html>
