@@ -1,1 +1,74 @@
-<!doctype html><meta charset=utf-8><title>Dev Sites</title><h1>5R Dev Sites</h1><p>Pages built by Dev Callahan live in subfolders.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5R Agent Control Panel</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#0f1722;color:#e8edf3;padding:0 0 60px}
+  header{background:linear-gradient(135deg,#16233a,#0f1722);padding:34px 20px 26px;text-align:center;border-bottom:1px solid #233248}
+  header h1{margin:0;font-size:26px}
+  header p{margin:8px 0 0;color:#9fb0c4;font-size:14px}
+  .wrap{max-width:920px;margin:0 auto;padding:0 18px}
+  h2{color:#9fb0c4;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;margin:34px 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .card{display:block;background:#172334;border:1px solid #243650;border-radius:14px;padding:18px;text-decoration:none;color:#e8edf3;transition:transform .12s,border-color .12s}
+  .card:hover{transform:translateY(-3px);border-color:#3f7bf0}
+  .card .ico{font-size:26px}
+  .card .name{font-weight:800;font-size:17px;margin:8px 0 4px}
+  .card .desc{color:#9fb0c4;font-size:13px;line-height:1.45}
+  .card .go{display:inline-block;margin-top:12px;color:#5d93ff;font-weight:700;font-size:13px}
+  .running{display:flex;flex-wrap:wrap;gap:10px}
+  .pill{background:#13202f;border:1px solid #234;border-radius:30px;padding:9px 15px;font-size:13px;color:#cdd9e6}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3ddc84;margin-right:7px}
+  footer{text-align:center;color:#5d6b7d;font-size:12px;margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🦅 5Royals Investments — Agent Control Panel</h1>
+  <p>Your AI workforce. Bookmark this page — every agent is one click away.</p>
+</header>
+<div class="wrap">
+
+  <h2>Agents you operate (click to use)</h2>
+  <div class="grid">
+    <a class="card" href="https://tradesuiteai.app.n8n.cloud/form/dev-build" target="_blank">
+      <div class="ico">🤖</div><div class="name">Dev Callahan — Web Builder</div>
+      <div class="desc">Describe a page → he builds &amp; publishes a website, emails you the link.</div>
+      <span class="go">Open form →</span>
+    </a>
+    <a class="card" href="https://tradesuiteai.app.n8n.cloud/form/carmen-social" target="_blank">
+      <div class="ico">📱</div><div class="name">Carmen Reyes — Social</div>
+      <div class="desc">Pick a business + topic → posts for all 7 platforms, emailed ready to schedule.</div>
+      <span class="go">Open form →</span>
+    </a>
+    <a class="card" href="https://5royalsinvestments-collab.github.io/dev-sites/sites/jasmine/" target="_blank">
+      <div class="ico">💬</div><div class="name">Jasmine Ortiz — Support</div>
+      <div class="desc">Customer support chat that answers only from your company knowledge.</div>
+      <span class="go">Open chat →</span>
+    </a>
+  </div>
+
+  <h2>Live storefront</h2>
+  <div class="grid">
+    <a class="card" href="https://antlershedok.com" target="_blank">
+      <div class="ico">🦌</div><div class="name">Antler Shed Oklahoma</div>
+      <div class="desc">Full store: products, cart, 20% deposit checkout, AI chat, pickup scheduler.</div>
+      <span class="go">Open site →</span>
+    </a>
+  </div>
+
+  <h2>Running 24/7 in the background (no link needed)</h2>
+  <div class="running">
+    <span class="pill"><span class="dot"></span>Email Triage — sorts &amp; drafts inbox replies</span>
+    <span class="pill"><span class="dot"></span>Inbox Cleanup — auto-unsubscribes from spam</span>
+    <span class="pill"><span class="dot"></span>Antler Shed Cart → Deposit → Scheduler</span>
+    <span class="pill"><span class="dot"></span>Antler Shed Website Chat</span>
+  </div>
+
+  <footer>5Royals Investments LLC · agents powered by Claude + n8n + Supabase</footer>
+</div>
+</body>
+</html>
