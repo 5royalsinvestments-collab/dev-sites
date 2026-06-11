@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jasmine — 5R Support Assistant</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#eef1f4;color:#1c2430}
+  .wrap{max-width:680px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+  header{background:#1f2a3a;color:#fff;padding:16px 20px}
+  header h1{margin:0;font-size:18px}
+  header p{margin:4px 0 0;font-size:13px;opacity:.8}
+  .biz{padding:12px 20px;background:#fff;border-bottom:1px solid #dde3ea;display:flex;align-items:center;gap:10px}
+  .biz label{font-size:13px;font-weight:700;color:#445}
+  .biz select{flex:1;padding:9px;border:1px solid #cdd5df;border-radius:8px;font-size:14px}
+  #msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+  .m{max-width:80%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.5;white-space:pre-wrap}
+  .bot{background:#fff;border:1px solid #e1e6ec;align-self:flex-start;border-bottom-left-radius:4px}
+  .me{background:#2f6df0;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  form{display:flex;gap:8px;padding:14px;background:#fff;border-top:1px solid #dde3ea}
+  #inp{flex:1;padding:13px;border:1px solid #cdd5df;border-radius:10px;font-size:15px;outline:none}
+  button{background:#2f6df0;color:#fff;border:none;padding:0 20px;border-radius:10px;font-weight:700;cursor:pointer}
+  .typing{align-self:flex-start;color:#8a94a4;font-size:20px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🦌 Jasmine — 5R Support Assistant</h1>
+    <p>Answers from your company knowledge. Powered by your Claude + Supabase brain.</p>
+  </header>
+  <div class="biz">
+    <label for="biz">Business:</label>
+    <select id="biz">
+      <option value="antlershed">Antler Shed Oklahoma</option>
+      <option value="tradesuite">5R TradeSuite AI</option>
+    </select>
+  </div>
+  <div id="msgs"></div>
+  <form id="f"><input id="inp" placeholder="Ask Jasmine a question…" autocomplete="off"><button type="submit">Send</button></form>
+</div>
+<script>
+(function(){
+  var EP="https://tradesuiteai.app.n8n.cloud/webhook/jasmine-support";
+  var msgs=document.getElementById("msgs"), biz=document.getElementById("biz"), hist=[];
+  function add(role,text){var d=document.createElement("div");d.className="m "+(role==="user"?"me":"bot");d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function greet(){msgs.innerHTML="";hist=[];add("bot","Hi! I'm Jasmine, your "+biz.options[biz.selectedIndex].text+" support assistant. Ask me anything — sizes, pricing, ordering, and more. 🦌");}
+  biz.onchange=greet; greet();
+  document.getElementById("f").onsubmit=function(e){
+    e.preventDefault();var inp=document.getElementById("inp");var t=inp.value.trim();if(!t)return;inp.value="";
+    add("user",t);hist.push({role:"user",content:t});
+    var typ=document.createElement("div");typ.className="typing";typ.textContent="•••";msgs.appendChild(typ);msgs.scrollTop=msgs.scrollHeight;
+    fetch(EP,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({business:biz.value,messages:hist.slice(-10)})})
+      .then(function(r){return r.json();})
+      .then(function(j){typ.remove();var rep=(j&&j.reply)||"Sorry — please contact our team.";add("bot",rep);hist.push({role:"assistant",content:rep});})
+      .catch(function(){typ.remove();add("bot","Connection hiccup — please try again.");});
+  };
+})();
+</script>
+</body>
+</html>
