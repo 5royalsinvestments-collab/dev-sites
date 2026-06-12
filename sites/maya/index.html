@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maya — Your Ecosystem PM</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#0f1722;color:#e8edf3}
+  .wrap{max-width:720px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(135deg,#1b2c47,#0f1722);padding:18px 20px;border-bottom:1px solid #233248}
+  header h1{margin:0;font-size:19px}
+  header p{margin:4px 0 0;font-size:13px;color:#9fb0c4}
+  #msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+  .m{max-width:84%;padding:12px 15px;border-radius:14px;font-size:15px;line-height:1.55;white-space:pre-wrap}
+  .bot{background:#172334;border:1px solid #243650;align-self:flex-start;border-bottom-left-radius:4px}
+  .me{background:#3f7bf0;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;padding:10px 18px;background:#0f1722}
+  .quick button{background:#172334;border:1px solid #2a3c57;color:#cdd9e6;padding:8px 13px;border-radius:20px;font-size:13px;cursor:pointer}
+  .quick button:hover{border-color:#3f7bf0}
+  form{display:flex;gap:8px;padding:14px;background:#13202f;border-top:1px solid #233248}
+  #inp{flex:1;padding:13px;border:1px solid #2a3c57;border-radius:10px;font-size:15px;background:#0f1722;color:#e8edf3;outline:none}
+  .send{background:#3f7bf0;color:#fff;border:none;padding:0 20px;border-radius:10px;font-weight:700;cursor:pointer}
+  .typing{align-self:flex-start;color:#7e8ea3;font-size:20px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>🦅 Maya Freeman — Ecosystem PM</h1><p>Your project manager. She sees every approval, task & lead across all 14 businesses.</p></header>
+  <div id="msgs"></div>
+  <div class="quick">
+    <button data-q="Give me a status briefing — what needs my attention?">📋 Status briefing</button>
+    <button data-q="What's pending my approval?">✋ Pending approvals</button>
+    <button data-q="Any hot leads I should follow up on?">🔥 Hot leads</button>
+    <button data-q="What tasks are open and who owns them?">✅ Open tasks</button>
+  </div>
+  <form id="f"><input id="inp" placeholder="Ask Maya, or assign a task…" autocomplete="off"><button class="send" type="submit">Send</button></form>
+</div>
+<script>
+(function(){
+  var EP="https://tradesuiteai.app.n8n.cloud/webhook/maya-pm";
+  var msgs=document.getElementById("msgs"), hist=[];
+  function add(role,text){var d=document.createElement("div");d.className="m "+(role==="user"?"me":"bot");d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function send(t){add("user",t);hist.push({role:"user",content:t});
+    var typ=document.createElement("div");typ.className="typing";typ.textContent="•••";msgs.appendChild(typ);msgs.scrollTop=msgs.scrollHeight;
+    fetch(EP,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({messages:hist.slice(-12)})})
+      .then(function(r){return r.json();}).then(function(j){typ.remove();var rep=(j&&j.reply)||"Sorry — try again.";add("bot",rep);hist.push({role:"assistant",content:rep});})
+      .catch(function(){typ.remove();add("bot","Connection hiccup — try again.");});}
+  add("bot","Hi Ed — I'm Maya, your Ecosystem PM. Ask me for a briefing, what needs your approval, hot leads, or just tell me to assign work to any agent. What do you need?");
+  document.querySelectorAll(".quick button").forEach(function(b){b.onclick=function(){send(b.dataset.q);};});
+  document.getElementById("f").onsubmit=function(e){e.preventDefault();var inp=document.getElementById("inp");var t=inp.value.trim();if(!t)return;inp.value="";send(t);};
+})();
+</script>
+</body>
+</html>
