@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ASSUMPTIONS & NOTES (Dev Callahan / WebBuilderBot):
+  - "Antler Shed OK" is not one of the 14 core 5R brands by that name.
+    Treating as a 5R ecosystem client/sub-brand page (Oklahoma-based antler shed hunting business).
+  - No contact info was provided — placeholder "info@antlershedok.com" used; Ed/owner should update.
+  - No offer price, Gumroad/Stripe links, or specific services were supplied —
+    used sensible defaults (guides, scouting, community) with CTA to an email signup.
+  - No logo/images provided — SVG icon + text-based hero used (no external images per spec).
+  - File name: antlershedok_landing_v1.html
+  - Version: v1 | Date: 2025
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antler Shed OK — Oklahoma's Premier Shed Hunting Community</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brown:   #5C3D1E;
+    --amber:   #C47C2B;
+    --tan:     #E8D5B0;
+    --cream:   #FAF6EE;
+    --green:   #2E4A2E;
+    --dkgreen: #1A2E1A;
+    --white:   #FFFFFF;
+    --text:    #1E1E1E;
+    --muted:   #5A5A5A;
+    --radius:  8px;
+    --max:     1100px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--dkgreen);
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+  .nav-brand span {
+    color: var(--amber);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .nav-cta {
+    background: var(--amber);
+    color: var(--white);
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--brown); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--dkgreen) 0%, var(--green) 60%, #3a5c2a 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 4rem 1.25rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(196,124,43,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-icon {
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 span { color: var(--amber); }
+  .hero p {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: rgba(255,255,255,0.88);
+    max-width: 620px;
+    margin: 0 auto 2rem;
+  }
+  .hero-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: center;
+  }
+  .btn-primary {
+    background: var(--amber);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--brown); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 2px solid rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--amber); background: rgba(196,124,43,0.12); }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    background: var(--brown);
+    color: var(--tan);
+    padding: 0.9rem 1.25rem;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .trust-bar span { margin: 0 0.75rem; }
+
+  /* ── SECTION WRAPPER ── */
+  .section { padding: 3.5rem 1.25rem; }
+  .section-inner { max-width: var(--max); margin: 0 auto; }
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--brown);
+  }
+  .section-sub {
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+  }
+  .centered { text-align: center; }
+  .centered .section-sub { margin-left: auto; margin-right: auto; }
+
+  /* ── FEATURES / CARDS ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.5rem;
+    border: 1px solid rgba(92,61,30,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--tan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 0.4rem;
+  }
+  .card p { font-size: 0.92rem; color: var(--muted); }
+
+  /* ── HOW IT WORKS ── */
+  .steps { background: var(--tan); }
+  .step-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    counter-reset: steps;
+  }
+  .step {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.25rem;
+    position: relative;
+    border-top: 4px solid var(--amber);
+    counter-increment: steps;
+  }
+  .step::before {
+    content: counter(steps);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--tan);
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    line-height: 1;
+  }
+  .step h3 { font-size: 1rem; font-weight: 700; color: var(--brown); margin-bottom: 0.35rem; }
+  .step p  { font-size: 0.9rem; color: var(--muted); }
+
+  /* ── WHAT YOU GET (offer) ── */
+  .offer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 700px) {
+    .offer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .offer-visual {
+    background: linear-gradient(135deg, var(--dkgreen) 0%, var(--green) 100%);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    color: var(--white);
+    text-align: center;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .offer-visual .big-icon { font-size: 4rem; }
+  .offer-visual h3 { font-size: 1.5rem; font-weight: 800; color: var(--amber); }
+  .offer-visual p  { font-size: 0.95rem; color: rgba(255,255,255,0.82); max-width: 260px; }
+  .offer-list { list-style: none; }
+  .offer-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(92,61,30,0.1);
+    font-size: 0.97rem;
+  }
+  .offer-list li:last-child { border-bottom: none; }
+  .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--dkgreen); }
+  .testimonials .section-title { color: var(--amber); }
+  .testimonials .section-label { color: var(--tan); }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .testi {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    color: var(--white);
+  }
+  .testi .stars { color: var(--amber); font-size: 1rem; margin-bottom: 0.6rem; }
+  .testi p     { font-size: 0.92rem; color: rgba(255,255,255,0.88); margin-bottom: 0.8rem; }
+  .testi .name { font-weight: 700; font-size: 0.85rem; color: var(--tan); }
+
+  /* ── EMAIL SIGNUP ── */
+  .signup { background: var(--white); }
+  .signup-box {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .signup-box .section-title { color: var(--brown); }
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .signup-form input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 2px solid var(--tan);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--cream);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .signup-form input:focus { border-color: var(--amber); }
+  .signup-form button {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: var(--amber);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .signup-form button:hover { background: var(--brown); }
+  .fine-print { font-size: 0.78rem; color: var(--muted); margin-top: 0.6rem; }
+
+  /* ── FAQ ── */
+  .faq-list { max-width: 720px; margin: 0 auto; }
+  details {
+    background: var(--white);
+    border: 1px solid rgba(92,61,30,0.12);
+    border-radius: var(--radius);
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  summary {
+    padding: 1.1rem 1.25rem;
+    font-weight: 700;
+    font-size: 0.97rem;
+    cursor: pointer;
+    color: var(--brown);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; color: var(--amber); font-size: 1.3rem; font-weight: 400; flex-shrink: 0; }
+  details[open] summary::after { content: '−'; }
+  details .faq-body {
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.93rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dkgreen);
+    color: rgba(255,255,255,0.65);
+    text-align: center;
+    padding: 2rem 1.25rem;
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--amber); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .footer-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 0.4rem;
+  }
+  footer .footer-sep { margin: 0 0.5rem; opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-brand" href="#">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <!-- Antler silhouette SVG icon -->
+      <path d="M10 28 C10 28 8 22 9 17 C10 12 7 8 5 5 C8 6 11 8 12 12 C13 10 13 7 12 4 C15 6 16 10 15 14 C16 12 18 9 20 8 C19 11 18 14 19 17 C20 13 23 10 26 9 C24 12 22 16 22 20 C23 18 26 16 28 16 C26 19 23 22 22 28" stroke="#C47C2B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="16" cy="29" rx="7" ry="2" fill="#C47C2B" opacity="0.25"/>
+    </svg>
+    <span>Antler Shed OK</span>
+  </a>
+  <a class="nav-cta" href="#signup">Join Free</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-icon">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+      <path d="M22 64 C22 64 18 50 20 38 C22 27 15 18 10 11 C18 13 25 18 27 27 C29 23 30 16 27 9 C33 13 36 22 34 31 C36 27 41 20 45 18 C43 25 40 31 42 38 C44 30 52 23 58 21 C54 27 50 36 50 45 C52 41 59 36 63 36 C59 43 52 50 50 64" stroke="#C47C2B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="36" cy="66" rx="16" ry="4" fill="#C47C2B" opacity="0.2"/>
+    </svg>
+  </div>
+  <h1>Oklahoma's #1<br><span>Shed Hunting</span> Community</h1>
+  <p>Find more sheds, scout smarter, and connect with serious shed hunters across Oklahoma — all in one place.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="#signup">Get Free Access</a>
+    <a class="btn-outline" href="#what-you-get">See What's Inside</a>
+  </div>
+</section>
+
+<!-- ══ TRUST BAR ══ -->
+<div class="trust-bar">
+  <span>🦌 Oklahoma-Based</span>
+  <span>📍 Real Shed Hunters</span>
+  <span>📖 Proven Scouting Tips</span>
+  <span>🆓 Free to Join</span>
+</div>
+
+<!-- ══ FEATURES ══ -->
+<section class="section">
+  <div class="section-inner centered">
+    <p class="section-label">Why Antler Shed OK</p>
+    <h2 class="section-title">Everything You Need to Find More Sheds</h2>
+    <p class="section-sub">Whether you're a first-timer or a seasoned hunter, we give you the tools, knowledge, and community to level up every season.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🗺️</div>
+        <h3>Oklahoma Scouting Maps</h3>
+        <p>Region-specific guides covering public land hotspots, creek bottoms, feeding areas, and transition zones across OK.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <h3>Drop Timeline Tracker</h3>
+        <p>Know exactly when bucks in your county are most likely dropping — based on historical patterns and local reports.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📸</div>
+        <h3>Community Find Gallery</h3>
+        <p>Share your hauls, see what others are finding, and learn which areas are producing sheds right now.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>Scouting Strategy Guides</h3>
+        <p>Step-by-step walkthroughs on reading terrain, using cameras, covering ground efficiently, and more.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Local Connections</h3>
+        <p>Connect with shed hunters in your county, swap intel, and find hunting partners who take it as seriously as you do.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Gear & Dog Training Tips</h3>
+        <p>Reviews on antler dog breeds, training drills, pack gear, and everything that helps you spend more time finding sheds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="section steps">
+  <div class="section-inner centered">
+    <p class="section-label">Simple Process</p>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Getting started takes less than two minutes.</p>
+    <div class="step-list">
+      <div class="step">
+        <h3>Sign Up Free</h3>
+        <p>Drop your name and email to instantly unlock the community, guides, and drop timeline tools.</p>
+      </div>
+      <div class="step">
+        <h3>Pick Your Region</h3>
+        <p>Tell us which part of Oklahoma you hunt. We'll surface the most relevant scouting intel for your area.</p>
+      </div>
+      <div class="step">
+        <h3>Hit the Woods</h3>
+        <p>Use your maps, timeline data, and community intel to find sheds faster than ever this season.</p>
+      </div>
+      <div class="step">
+        <h3>Share & Grow</h3>
+        <p>Post your finds, contribute local reports, and help the whole community get better together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHAT YOU GET ══ -->
+<section class="section" id="what-you-get">
+  <div class="section-inner">
+    <div class="offer-grid">
+      <div class="offer-visual">
+        <div class="big-icon">🦌</div>
+        <h3>Free Member Access</h3>
+        <p>Everything you need to find more sheds in Oklahoma — no credit card, no catch.</p>
+      </div>
+      <div>
+        <p class="section-label">What You Get</p>
+        <h2 class="section-title" style="color:var(--brown);">Your Full Membership Includes</h2>
+        <ul class="offer-list">
+          <li><span class="check">✓</span> Oklahoma drop calendar &amp; timeline tracker</li>
+          <li><span class="check">✓</span> County-by-county scouting region guides</li>
+          <li><span class="check">✓</span> Private community access &amp; find gallery</li>
+          <li><span class="check">✓</span> Terrain reading &amp; route planning walkthroughs</li>
+          <li><span class="check">✓</span> Shed dog training tips &amp; breed recommendations</li>
+          <li><span class="check">✓</span> Gear reviews from real OK hunters</li>
+          <li><span class="check">✓</span> Weekly shed reports from across the state</li>
+          <li><span class="check">✓</span> Early access to events &amp; local meet-ups</li>
+        </ul>
+        <a class="btn-primary" href="#signup" style="margin-top:1.5rem;display:inline-block;">Join Free Today →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="section testimonials">
+  <div class="section-inner centered">
+    <p class="section-label">Member Stories</p>
+    <h2 class="section-title">Real Oklahoma Shed Hunters</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.7);">From first-timers to seasoned veterans — here's what members are saying.</p>
+    <div class="testi-grid">
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Found more sheds in my first season using the drop timeline than I did in the previous three years combined. This community is the real deal."</p>
+        <div class="name">— Jake T., Tulsa County</div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"The scouting maps alone are worth it. I finally stopped wasting miles walking the wrong terrain. Two sets of matched pairs this year!"</p>
+        <div class="name">— Russ M., Payne County</div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Great people, honest intel. No one's keeping secrets here. My antler dog found her first shed two weeks after I started the training tips."</p>
+        <div class="name">— Dana K., McClain County</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EMAIL SIGNUP ══ -->
+<section class="section signup" id="signup">
+  <div class="signup-box">
+    <p class="section-label" style="text-align:center;">Join the Community</p>
+    <h2 class="section-title">Start Finding More Sheds — Free</h2>
+    <p style="color:var(--muted);font-size:0.97rem;">Enter your info below and we'll send your welcome kit with first-access guides and the Oklahoma drop timeline.</p>
+    <form class="signup-form" onsubmit="handleSignup(event)">
+      <input type="text"  name="name"  placeholder="Your First Name"      required autocomplete="given-name">
+      <input type="email" name="email" placeholder="Your Email Address"   required autocomplete="email">
+      <input type="text"  name="county" placeholder="Your Oklahoma County (e.g. Payne, Tulsa…)">
+      <button type="submit">🦌 Get Free Access Now</button>
+    </form>
+    <p class="fine-print">No spam. Unsubscribe anytime. We respect your privacy.</p>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="section">
+  <div class="section-inner centered">
+    <p class="section-label">Questions</p>
+    <h2 class="section-title">Frequently Asked</h2>
+    <div class="faq-list" style="text-align:left;margin-top:2rem;">
+      <details>
+        <summary>Is it really free to join?</summary>
+        <div class="faq-body">Yes — free membership is genuinely free. You'll get immediate access to the drop timeline, scouting guides, and the community. We may offer premium resources in the future, but core membership stays free.</div>
+      </details>
+      <details>
+        <summary>Do I need to be an experienced shed hunter?</summary>
+        <div class="faq-body">Not at all. We have guides specifically built for beginners who've never found a shed and veterans who want to find even more. Everyone is welcome.</div>
+      </details>
+      <details>
+        <summary>Is this only for public land hunters?</summary>
+        <div class="faq-body">No. Our scouting principles, drop timelines, and community apply to both public land and private property hunters across Oklahoma.</div>
+      </details>
+      <details>
+        <summary>Do I need an antler dog?</summary>
+        <div class="faq-body">Nope. Plenty of members hunt on foot without a dog and find great sheds. Dog training content is just one of many resources — use what applies to you.</div>
+      </details>
+      <details>
+        <summary>How do I contact you?</summary>
+        <div class="faq-body">Reach us anytime at <a href="mailto:info@antlershedok.com" style="color:var(--amber);">info@antlershedok.com</a> — we typically reply within 24 hours.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL CTA BANNER ══ -->
+<section style="background:var(--amber);padding:3rem 1.25rem;text-align:center;">
+  <h2 style="color:var(--white);font-size:clamp(1.5rem,4vw,2rem);font-weight:800;margin-bottom:0.6rem;">Oklahoma's Shed Season Won't Wait</h2>
+  <p style="color:rgba(255,255,255,0.88);margin-bottom:1.5rem;font-size:1rem;">Sign up free and be ready before bucks start dropping this year.</p>
+  <a class="btn-primary" href="#signup" style="background:var(--dkgreen);font-size:1.05rem;padding:0.95rem 2.25rem;">Join Antler Shed OK Free →</a>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-brand">🦌 Antler Shed OK</div>
+  <p style="margin-bottom:0.5rem;">Oklahoma's Premier Shed Hunting Community</p>
+  <p>
+    <a href="mailto:info@antlershedok.com">info@antlershedok.com</a>
+    <span class="footer-sep">|</span>
+    <a href="#signup">Join Free</a>
+    <span class="footer-sep">|</span>
+    <a href="#">Privacy Policy</a>
+  </p>
+  <p style="margin-top:1rem;font-size:0.78rem;opacity:0.5;">© 2025 Antler Shed OK. All rights reserved. A 5Royals Investments LLC property.</p>
+</footer>
+
+<script>
+  function handleSignup(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '✅ You\'re In! Check your inbox.';
+    btn.style.background = 'var(--green)';
+    btn.disabled = true;
+    // TODO (Gabriel Silva / ITBot handoff): wire this form to MailerLite/ConvertKit
+    // via n8n webhook or embed. No API keys in this file.
+  }
+</script>
+
+</body>
+</html>
