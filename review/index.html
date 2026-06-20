@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5R Review Inbox</title>
+<style>
+  :root{ --ink:#1d2330; --bg:#f4f6fb; --line:#e2e6f0; --blue:#2b5cff; --green:#1f9d56; --red:#c2402f; --mut:#7b8499; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  header{background:#141a2b;color:#fff;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:5}
+  header h1{font-size:17px;margin:0}
+  header .meta{font-size:12px;opacity:.8}
+  .btn{border:0;border-radius:8px;padding:9px 14px;font-size:14px;font-weight:600;cursor:pointer}
+  .ghost{background:#27304a;color:#dfe5f3}
+  .wrap{max-width:840px;margin:0 auto;padding:18px}
+  /* gate */
+  #gate{max-width:380px;margin:9vh auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.06)}
+  #gate h2{margin:.2em 0;color:#141a2b}#gate p{color:var(--mut);font-size:14px;margin:.2em 0 16px}
+  input{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;font-size:15px}
+  .gate-err{color:var(--red);font-size:13px;min-height:18px;margin-top:8px}
+  /* cards */
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:13px;cursor:pointer;color:#46506a}
+  .chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(20,26,43,.05)}
+  .chead{display:flex;align-items:center;gap:8px;padding:12px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .who{font-weight:700}.dot{color:var(--mut)}
+  .badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.03em}
+  .b-draft{background:#e7f0ff;color:#2b5cff}.b-need{background:#fdeede;color:#c47d12}
+  .biz{font-size:11px;background:#eef0f6;color:#5a6480;border-radius:6px;padding:3px 8px}
+  .ctitle{padding:11px 15px 4px;font-weight:600;font-size:15px}
+  .body{padding:6px 15px 12px;white-space:pre-wrap;font-size:14px;line-height:1.55;color:#2b3344;max-height:300px;overflow:auto;border-bottom:1px solid var(--line)}
+  .body.expanded{max-height:none}
+  .more{padding:4px 15px 0;font-size:12.5px;color:var(--blue);cursor:pointer}
+  .acts{display:flex;gap:8px;padding:12px 15px}
+  .approve{background:var(--green);color:#fff;flex:1}
+  .reject{background:#fff;color:var(--red);border:1px solid #ecc9c3;flex:1}
+  .empty{text-align:center;color:var(--mut);padding:50px 20px}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#141a2b;color:#fff;padding:10px 18px;border-radius:9px;font-size:14px;opacity:0;transition:.2s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div style="font-size:32px">🗂️✅</div>
+  <h2>5R Review Inbox</h2>
+  <p>Approve or send back the drafts your AI agents produced. Enter your passcode.</p>
+  <input id="pass" type="password" placeholder="Passcode" autocomplete="off">
+  <div class="gate-err" id="gateErr"></div>
+  <button class="btn" style="background:var(--blue);color:#fff;width:100%;margin-top:6px" id="gateBtn">Unlock</button>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <div><h1>🗂️ Review Inbox</h1><div class="meta" id="count">—</div></div>
+    <div style="display:flex;gap:6px"><button class="btn ghost" onclick="load()">↻ Refresh</button><button class="btn ghost" onclick="lock()">Lock</button></div>
+  </header>
+  <div class="wrap">
+    <div class="filters" id="filters"></div>
+    <div id="list"><p class="empty">Loading…</p></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var EP = "https://tradesuiteai.app.n8n.cloud/webhook/review-inbox";
+  var pass = "", items = [], filter = "all";
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/^#{1,6}\s*(.+)$/gm,"<b>$1</b>").replace(/^[-*]\s+(.+)$/gm,"• $1"); }
+  function toast(m){ var t=$("toast"); t.textContent=m; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},2000); }
+  function api(p){ p.passcode=pass; return fetch(EP,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(p)}).then(function(r){return r.json();}); }
+
+  function tryUnlock(){
+    var p=$("pass").value.trim(); if(!p) return; pass=p; $("gateErr").textContent="Checking…";
+    api({action:"list"}).then(function(res){
+      if(res&&res.ok){ sessionStorage.setItem("rv_pass",pass); items=res.items||[]; $("gate").style.display="none"; $("app").style.display="block"; render(); }
+      else { pass=""; $("gateErr").textContent=(res&&res.error)||"Wrong passcode."; }
+    }).catch(function(){ pass=""; $("gateErr").textContent="Network error."; });
+  }
+  $("gateBtn").addEventListener("click",tryUnlock);
+  $("pass").addEventListener("keydown",function(e){ if(e.key==="Enter") tryUnlock(); });
+  window.lock=function(){ sessionStorage.removeItem("rv_pass"); location.reload(); };
+  window.load=function(){ api({action:"list"}).then(function(res){ if(res&&res.ok){ items=res.items||[]; render(); } }); };
+
+  function render(){
+    var biz = {}; items.forEach(function(i){ biz[i.business_slug||"other"]=(biz[i.business_slug||"other"]||0)+1; });
+    var chips = '<span class="chip'+(filter==="all"?" on":"")+'" data-f="all">All ('+items.length+')</span>';
+    Object.keys(biz).forEach(function(b){ chips += '<span class="chip'+(filter===b?" on":"")+'" data-f="'+b+'">'+b+' ('+biz[b]+')</span>'; });
+    $("filters").innerHTML = chips;
+    $("count").textContent = items.length + " draft" + (items.length===1?"":"s") + " awaiting your review";
+    var shown = items.filter(function(i){ return filter==="all" || (i.business_slug||"other")===filter; });
+    if(!shown.length){ $("list").innerHTML = '<p class="empty">🎉 All clear — nothing to review.</p>'; return; }
+    $("list").innerHTML = shown.map(function(i){
+      var need = (i.kind==="needs_approval");
+      return '<div class="card" data-id="'+i.id+'">'+
+        '<div class="chead"><span class="who">'+esc(i.agent||"Agent")+'</span><span class="dot">·</span>'+
+        '<span class="biz">'+esc(i.business_slug||"—")+'</span>'+
+        '<span class="badge '+(need?"b-need":"b-draft")+'">'+(need?"needs approval":"draft")+'</span></div>'+
+        '<div class="ctitle">'+esc(i.title||"")+'</div>'+
+        '<div class="body" id="b'+i.id+'">'+md(i.body||"")+'</div>'+
+        '<div class="more" data-exp="'+i.id+'">Show full ▾</div>'+
+        '<div class="acts"><button class="btn approve" data-ok="'+i.id+'">✓ Approve</button>'+
+        '<button class="btn reject" data-no="'+i.id+'">↩ Send back</button></div></div>';
+    }).join("");
+  }
+
+  $("filters").addEventListener("click",function(e){ var c=e.target.closest(".chip"); if(c){ filter=c.dataset.f; render(); } });
+  $("list").addEventListener("click",function(e){
+    var exp=e.target.closest("[data-exp]"); if(exp){ var b=$("b"+exp.dataset.exp); b.classList.toggle("expanded"); exp.textContent=b.classList.contains("expanded")?"Show less ▴":"Show full ▾"; return; }
+    var ok=e.target.closest("[data-ok]"); if(ok){ decide(ok.dataset.ok,"approved"); return; }
+    var no=e.target.closest("[data-no]"); if(no){ var note=prompt("Send back — what should the agent change? (optional)")||""; if(note!==null) decide(no.dataset.no,"rejected",note); return; }
+  });
+
+  function decide(id,status,note){
+    var card=document.querySelector('.card[data-id="'+id+'"]'); if(card) card.style.opacity=".5";
+    api({action:"decide",id:Number(id),status:status,note:note||null}).then(function(res){
+      if(res&&res.ok){ items=items.filter(function(x){return String(x.id)!==String(id);}); render(); toast(status==="approved"?"Approved ✓":"Sent back ↩"); }
+      else { if(card) card.style.opacity="1"; toast((res&&res.error)||"Failed"); }
+    }).catch(function(){ if(card) card.style.opacity="1"; toast("Network error"); });
+  }
+
+  var saved=sessionStorage.getItem("rv_pass"); if(saved){ $("pass").value=saved; tryUnlock(); }
+})();
+</script>
+</body>
+</html>
